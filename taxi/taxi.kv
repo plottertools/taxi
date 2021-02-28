@@ -1,0 +1,357 @@
+#:kivy 2.0.0
+<BannerLabel@Label>:
+    size_hint_y: 0.15
+    halign: 'center'
+    valign: 'middle'
+    text_size: self.size
+    font_size: 60
+    bold: True
+
+<FileChooserButton>
+    on_release:
+        app.path = self.path
+        app.load_svg()
+        app.root.transition.direction = 'left'
+        app.root.current = 'params'
+    size_hint: 0.25, None
+    text_size: self.size
+    halign: 'center'
+    valign: 'middle'
+
+<FileChooserScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        BannerLabel:
+            text: 'File Selection'
+
+        FileListLayout:
+
+        Button:
+            text: 'Quit'
+            background_color: 1., 0., 0., 1.
+            size_hint_y: None
+
+<ParamLabel@Label>:
+    size_hint_x: None
+    width: 200
+    text_size: self.size
+    halign: 'right'
+    valign: 'middle'
+    bold: True
+
+<ParamValue@Label>:
+    size_hint_x: None
+    width: 60
+    text_size: self.size
+    halign: 'left'
+    valign: 'middle'
+
+<ParamSwitch@Switch>:
+    size_hint_x: None
+    size: 200, self.height
+
+<ParamButton@Button>:
+    size_hint_x: None
+    width: 150
+
+<ParamActionButton@Button>:
+    size_hint_x: None
+    width: 250
+    background_color: 0., 0.5, 0., 1.
+
+<Placeholder@Label>:
+    size_hint_x: None
+
+<ParamsScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: 10
+
+        BannerLabel:
+            text: 'Parameters'
+
+        GridLayout:
+            cols: 6
+            spacing: 5
+
+            # =================================
+            # File
+            ParamLabel:
+                text: 'File: '
+            Label:
+                text: str(app.path)
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+
+            Placeholder:
+            Placeholder:
+            Placeholder:
+            Placeholder:
+
+            # =================================
+            # Format
+            ParamLabel:
+                text: 'Format: '
+            Label:
+                text: "a4 landscape"
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+
+            Placeholder:
+            Placeholder:
+            Placeholder:
+            Placeholder:
+
+            # =================================
+            # Rotate
+            ParamLabel:
+                text: 'Rotate: '
+            ParamSwitch:
+                active: app.config.getboolean('taxi', 'rotate')
+                on_active: app.rotate = self.active
+            Placeholder:
+            Placeholder:
+            Placeholder:
+            Placeholder:
+
+
+            # =================================
+            # Rotate
+            ParamLabel:
+                text: 'Constant Speed: '
+            ParamSwitch:
+                active: app.config.getboolean('taxi', 'const_speed')
+                on_active: app.const_speed = self.active
+            Placeholder:
+            Placeholder:
+            Placeholder:
+            Placeholder:
+
+
+            # =================================
+            # PEN DOWN
+            ParamLabel:
+                text: 'Pen Down:'
+            Slider:
+                id: pen_down_slider
+                min: 0
+                max: 100
+                step: 1
+
+                value: app.pen_pos_down
+                on_value: app.pen_pos_down = self.value
+            ParamValue:
+                text: str(int(pen_down_slider.value))
+            ParamButton:
+                text: 'DEC'
+                on_release: pen_down_slider.value -= 5
+            ParamButton:
+                text: 'INC'
+                on_release: pen_down_slider.value += 5
+            ParamActionButton:
+                text: 'DOWN'
+                on_release: app.pen_down()
+
+
+            # =================================
+            # PEN UP
+            ParamLabel:
+                text: 'Pen Up:'
+            Slider:
+                id: pen_up_slider
+                min: 0
+                max: 100
+                step: 1
+
+                value: app.pen_pos_up
+                on_value: app.pen_pos_up = self.value
+            ParamValue:
+                text: str(int(pen_up_slider.value))
+            ParamButton:
+                text: 'DEC'
+                on_release: pen_up_slider.value -= 5
+            ParamButton:
+                text: 'INC'
+                on_release: pen_up_slider.value += 5
+            ParamActionButton:
+                text: 'UP'
+                on_release: app.pen_up()
+
+
+            # =================================
+            # SPEED
+            ParamLabel:
+                text: 'Speed:'
+            Slider:
+                id: speed_slider
+                min: 1
+                max: 110
+                step: 1
+
+                value: app.speed
+                on_value: app.speed = self.value
+            ParamValue:
+                text: str(int(speed_slider.value))
+            ParamButton:
+                text: 'DEC'
+                on_release: speed_slider.value -= 5
+            ParamButton:
+                text: 'INC'
+                on_release: speed_slider.value += 5
+            Placeholder:
+
+            # =================================
+            # ACCEL
+            ParamLabel:
+                text: 'Accel:'
+            Slider:
+                id: accel_slider
+                min: 1
+                max: 100
+                step: 1
+
+                value: app.accel
+                on_value: app.accel = self.value
+            ParamValue:
+                text: str(int(accel_slider.value))
+            ParamButton:
+                text: 'DEC'
+                on_release: accel_slider.value -= 5
+            ParamButton:
+                text: 'INC'
+                on_release: accel_slider.value += 5
+            Placeholder:
+
+        BoxLayout:
+            size_hint_y: None
+            Button:
+                text: 'Back'
+                background_color: 1., 0., 0., 1.
+                size_hint_y: None
+                on_release:
+                    root.manager.transition.direction = 'right'
+                    root.manager.current = 'file'
+
+            Button:
+                text: 'Defaults'
+                background_color: .7, .7, 1., 1.
+                size_hint_y: None
+                on_release:
+                    app.pen_pos_up = 60
+                    app.pen_pos_down = 40
+                    app.speed = 25
+                    app.accel = 75
+                    app.const_speed = False
+                    app.rotate = False
+
+            Button:
+                text: 'Continue'
+                background_color: 0., 0.5, 0., 1.
+                size_hint_y: None
+                on_release:
+                    root.manager.transition.direction = 'left'
+                    root.manager.current = 'layers'
+
+<LayerToggleButton>:
+    size_hint: 0.25, None
+    text_size: self.size
+    halign: 'center'
+    valign: 'middle'
+
+    on_state:
+        app.layer_visibility[self.layer_id] = self.state == "down"
+
+
+<LayersScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        BannerLabel:
+            text: 'Layers'
+
+        LayerListLayout:
+            id: layer_list
+
+        BoxLayout:
+            size_hint_y: None
+
+            Button:
+                text: 'Back'
+                background_color: 1., 0., 0., 1.
+                size_hint_y: None
+                on_release:
+                    root.manager.transition.direction = 'right'
+                    root.manager.current = 'params'
+
+            Button:
+                text: 'Select All'
+                background_color: .7, .7, 1., 1.
+                size_hint_y: None
+                on_release: layer_list.select_all()
+
+            Button:
+                text: 'Deselect All'
+                background_color: .7, .7, 1., 1.
+                size_hint_y: None
+                on_release: layer_list.deselect_all()
+
+            Button:
+                text: 'Start Plot'
+                background_color: 0., 0.5, 0., 1.
+                size_hint_y: None
+                on_release:
+                    root.manager.transition.direction = 'left'
+                    root.manager.current = 'plot'
+
+<PlottingScreen>:
+    on_pre_enter:
+        app.start_plot()
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        BannerLabel:
+            text: 'Plotting'
+
+        Label:
+            text: "Plotting..." if app.plot_running else "Plot completed"
+            halign: 'center'
+            bold: True
+
+        BoxLayout:
+            size_hint_y: None
+
+            Button:
+                text: 'Back'
+                background_color: 1., 0., 0., 1.
+                size_hint_y: None
+                disabled: app.plot_running
+                on_release:
+                    root.manager.transition.direction = 'right'
+                    root.manager.current = 'layers'
+
+            Button:
+                text: 'Home'
+                background_color: 1., 0., 0., 1.
+                size_hint_y: None
+                disabled: app.plot_running
+                on_release:
+                    root.manager.transition.direction = 'right'
+                    root.manager.current = 'file'
+
+            Button:
+                text: 'Quit'
+                background_color: 1., 0., 0., 1.
+                size_hint_y: None
+                disabled: app.plot_running
+                on_release: app.stop()
+
+            Button:
+                text: 'Plot Again'
+                background_color: 0., 0.5, 0., 1.
+                size_hint_y: None
+                disabled: app.plot_running
+                on_release: app.start_plot()

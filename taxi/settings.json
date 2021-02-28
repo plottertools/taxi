@@ -1,0 +1,60 @@
+[
+  {
+    "type": "title",
+    "title": "Taxi settings"
+  },
+  {
+    "type": "path",
+    "title": "SVG directory",
+    "section": "taxi",
+    "key": "svg_dir",
+    "dirselect": "true",
+    "show_hidden": "true"
+  },
+  {
+    "type": "title",
+    "title": "Axidraw settings"
+  },
+  {
+    "type": "numeric",
+    "title": "speed_penup",
+    "section": "taxi",
+    "key": "speed_penup"
+  },
+  {
+    "type": "numeric",
+    "title": "pen_rate_lower",
+    "section": "taxi",
+    "key": "pen_rate_lower"
+  },
+  {
+    "type": "numeric",
+    "title": "pen_rate_raise",
+    "section": "taxi",
+    "key": "pen_rate_raise"
+  },
+  {
+    "type": "numeric",
+    "title": "pen_delay_down",
+    "section": "taxi",
+    "key": "pen_delay_down"
+  },
+  {
+    "type": "numeric",
+    "title": "pen_delay_up",
+    "section": "taxi",
+    "key": "pen_delay_up"
+  },
+  {
+    "type": "numeric",
+    "title": "model",
+    "section": "taxi",
+    "key": "model"
+  },
+  {
+    "type": "string",
+    "title": "port",
+    "section": "taxi",
+    "key": "port"
+  }
+]
