@@ -1,31 +1,6 @@
-[tool.poetry]
-name = "taxi"
-version = "0.1.0"
-description = "Opinionated Axidraw interface"
-authors = ["Antoine Beyeler <abeyeler@ab-ware.com>"]
-license = "MIT"
-readme = "README.md"
-homepage = "https://github.com/abey79/taxi"
-packages = [
-    { include = "taxi" },
-]
-include = [
-    "taxi/*.kv",
-    "taxi/*.json",
-]
-
-[tool.poetry.dependencies]
-python = "^3.8, <3.10"
-Kivy = "^2.0.0"
-vpype = "^1.5.1"
-
-[tool.poetry.dev-dependencies]
-isort = "^5.7.0"
-black = "^20.8b1"
-
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [tool.black]
 line-length = 95
