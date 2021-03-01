@@ -18,43 +18,43 @@
   {
     "type": "numeric",
     "title": "speed_penup",
-    "section": "taxi",
+    "section": "axidraw",
     "key": "speed_penup"
   },
   {
     "type": "numeric",
     "title": "pen_rate_lower",
-    "section": "taxi",
+    "section": "axidraw",
     "key": "pen_rate_lower"
   },
   {
     "type": "numeric",
     "title": "pen_rate_raise",
-    "section": "taxi",
+    "section": "axidraw",
     "key": "pen_rate_raise"
   },
   {
     "type": "numeric",
     "title": "pen_delay_down",
-    "section": "taxi",
+    "section": "axidraw",
     "key": "pen_delay_down"
   },
   {
     "type": "numeric",
     "title": "pen_delay_up",
-    "section": "taxi",
+    "section": "axidraw",
     "key": "pen_delay_up"
   },
   {
     "type": "numeric",
     "title": "model",
-    "section": "taxi",
+    "section": "axidraw",
     "key": "model"
   },
   {
     "type": "string",
     "title": "port",
-    "section": "taxi",
+    "section": "axidraw",
     "key": "port"
   }
 ]
