@@ -214,6 +214,9 @@ class TaxiApp(App):
         axy.set_option("model", round(float(self.config.get("axidraw", "model"))))
         axy.set_option("port", str(self.config.get("axidraw", "port")))
 
+        # default option
+        axy.set_option("auto_rotate", False)
+
     def pen_up(self):
         self.apply_axy_options()
         axy.pen_up()
@@ -228,7 +231,7 @@ class TaxiApp(App):
             target=self.run_plot, args=(self.document, self.rotate, self.layer_visibility)
         )
 
-        print("STARTING PLOT")
+        Logger.info("starting plot")
         self.plot_running = True
         self._plot_thread.start()
         self._clock = Clock.schedule_interval(self.check_plot, 0.1)
@@ -236,7 +239,7 @@ class TaxiApp(App):
     # noinspection PyUnusedLocal
     def check_plot(self, dt):
         if self._plot_thread is not None and not self._plot_thread.is_alive():
-            print("PLOTTING COMPLETED")
+            Logger.info("plot completed")
             self._plot_thread = None
             self._clock.cancel()
             self.plot_running = False
@@ -273,7 +276,6 @@ class TaxiApp(App):
 
         # plot
         axy.plot_svg(svg)
-        sleep(5)
 
 
 if __name__ == "__main__":
