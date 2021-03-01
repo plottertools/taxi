@@ -1,4 +1,5 @@
 #:kivy 2.0.0
+
 <BannerLabel@Label>:
     size_hint_y: 0.15
     halign: 'center'
@@ -13,6 +14,7 @@
         app.load_svg()
         app.root.transition.direction = 'left'
         app.root.current = 'params'
+    background_color: 0., 0.5, 0., 1.
     size_hint: 0.25, None
     text_size: self.size
     halign: 'center'
@@ -25,12 +27,29 @@
         BannerLabel:
             text: 'File Selection'
 
-        FileListLayout:
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
 
-        Button:
-            text: 'Quit'
-            background_color: 1., 0., 0., 1.
+            FileListLayout:
+                size_hint_y: None
+                height: self.minimum_height
+
+        BoxLayout:
             size_hint_y: None
+
+            Button:
+                text: 'Settings'
+                background_color: .7, .7, 1., 1.
+                size_hint_y: None
+                on_release: app.open_settings()
+
+            Button:
+                text: 'Quit'
+                background_color: 1., 0., 0., 1.
+                size_hint_y: None
+                on_release: app.stop()
+
 
 <ParamLabel@Label>:
     size_hint_x: None
