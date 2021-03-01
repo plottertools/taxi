@@ -45,6 +45,12 @@
                 on_release: app.open_settings()
 
             Button:
+                text: 'Motor Off'
+                background_color: .7, .7, 1., 1.
+                size_hint_y: None
+                on_release: app.motor_off()
+
+            Button:
                 text: 'Quit'
                 background_color: 1., 0., 0., 1.
                 size_hint_y: None
@@ -126,7 +132,9 @@
                 text: 'Rotate: '
             ParamSwitch:
                 active: app.config.getboolean('taxi', 'rotate')
-                on_active: app.rotate = self.active
+                on_active:
+                    app.config.set('taxi', 'rotate', bool(self.active))
+                    app.config.write()
             Placeholder:
             Placeholder:
             Placeholder:
@@ -145,6 +153,29 @@
             Placeholder:
             Placeholder:
 
+            # =================================
+            # PEN UP
+            ParamLabel:
+                text: 'Pen Up:'
+            Slider:
+                id: pen_up_slider
+                min: 0
+                max: 100
+                step: 1
+
+                value: app.pen_pos_up
+                on_value: app.pen_pos_up = int(self.value)
+            ParamValue:
+                text: str(int(pen_up_slider.value))
+            ParamButton:
+                text: 'DEC'
+                on_release: pen_up_slider.value -= 5
+            ParamButton:
+                text: 'INC'
+                on_release: pen_up_slider.value += 5
+            ParamActionButton:
+                text: 'UP'
+                on_release: app.pen_up()
 
             # =================================
             # PEN DOWN
@@ -169,32 +200,6 @@
             ParamActionButton:
                 text: 'DOWN'
                 on_release: app.pen_down()
-
-
-            # =================================
-            # PEN UP
-            ParamLabel:
-                text: 'Pen Up:'
-            Slider:
-                id: pen_up_slider
-                min: 0
-                max: 100
-                step: 1
-
-                value: app.pen_pos_up
-                on_value: app.pen_pos_up = self.value
-            ParamValue:
-                text: str(int(pen_up_slider.value))
-            ParamButton:
-                text: 'DEC'
-                on_release: pen_up_slider.value -= 5
-            ParamButton:
-                text: 'INC'
-                on_release: pen_up_slider.value += 5
-            ParamActionButton:
-                text: 'UP'
-                on_release: app.pen_up()
-
 
             # =================================
             # SPEED

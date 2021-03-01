@@ -103,7 +103,6 @@ class TaxiApp(App):
     speed = ConfigParserProperty(25, "axidraw", "speed_pendown", "app")
     accel = ConfigParserProperty(75, "axidraw", "accel", "app")
     const_speed = ConfigParserProperty(False, "axidraw", "const_speed", "app")
-    rotate = ConfigParserProperty(False, "axidraw", "rotate", "app")
     path = ObjectProperty()
     layer_list = ObjectProperty()
     layer_visibility = DictProperty()
@@ -145,7 +144,7 @@ class TaxiApp(App):
                 "pen_delay_up": 0,
                 "const_speed": False,
                 "model": 2,
-                "port": "/dev/tty.usb",
+                "port": "",
             },
         )
         config.setdefaults(
@@ -189,29 +188,17 @@ class TaxiApp(App):
         self.page_format = s
 
     def apply_axy_options(self):
-        axy.set_option(
-            "speed_pendown", round(float(self.config.get("axidraw", "speed_pendown")))
-        )
-        axy.set_option("speed_penup", round(float(self.config.get("axidraw", "speed_penup"))))
-        axy.set_option("accel", round(float(self.config.get("axidraw", "accel"))))
-        axy.set_option(
-            "pen_pos_down", round(float(self.config.get("axidraw", "pen_pos_down")))
-        )
-        axy.set_option("pen_pos_up", round(float(self.config.get("axidraw", "pen_pos_up"))))
-        axy.set_option(
-            "pen_rate_lower", round(float(self.config.get("axidraw", "pen_rate_lower")))
-        )
-        axy.set_option(
-            "pen_rate_raise", round(float(self.config.get("axidraw", "pen_rate_raise")))
-        )
-        axy.set_option(
-            "pen_delay_down", round(float(self.config.get("axidraw", "pen_delay_down")))
-        )
-        axy.set_option(
-            "pen_delay_up", round(float(self.config.get("axidraw", "pen_delay_up")))
-        )
-        axy.set_option("const_speed", bool(self.config.get("axidraw", "const_speed")))
-        axy.set_option("model", round(float(self.config.get("axidraw", "model"))))
+        axy.set_option("speed_pendown", self.config.getint("axidraw", "speed_pendown"))
+        axy.set_option("speed_penup", self.config.getint("axidraw", "speed_penup"))
+        axy.set_option("accel", self.config.getint("axidraw", "accel"))
+        axy.set_option("pen_pos_down", self.config.getint("axidraw", "pen_pos_down"))
+        axy.set_option("pen_pos_up", self.config.getint("axidraw", "pen_pos_up"))
+        axy.set_option("pen_rate_lower", self.config.getint("axidraw", "pen_rate_lower"))
+        axy.set_option("pen_rate_raise", self.config.getint("axidraw", "pen_rate_raise"))
+        axy.set_option("pen_delay_down", self.config.getint("axidraw", "pen_delay_down"))
+        axy.set_option("pen_delay_up", self.config.getint("axidraw", "pen_delay_up"))
+        axy.set_option("const_speed", self.config.getboolean("axidraw", "const_speed"))
+        axy.set_option("model", self.config.getint("axidraw", "model"))
         axy.set_option("port", str(self.config.get("axidraw", "port")))
 
         # default option
@@ -239,7 +226,12 @@ class TaxiApp(App):
     def start_plot(self):
         self.apply_axy_options()
         self._plot_thread = threading.Thread(
-            target=self.run_plot, args=(self.document, self.rotate, self.layer_visibility)
+            target=self.run_plot,
+            args=(
+                self.document,
+                self.config.getboolean("taxi", "rotate"),
+                self.layer_visibility,
+            ),
         )
 
         Logger.info("starting plot")
