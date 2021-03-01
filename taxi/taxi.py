@@ -230,6 +230,9 @@ class TaxiApp(App):
         self.apply_axy_options()
         axy.shutdown()
 
+    def on_start(self):
+        self.motor_off()
+
     def on_stop(self):
         self.motor_off()
 
