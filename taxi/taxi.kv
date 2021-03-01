@@ -354,6 +354,7 @@
                 size_hint_y: None
                 disabled: app.plot_running
                 on_release:
+                    app.motor_off()
                     root.manager.transition.direction = 'right'
                     root.manager.current = 'file'
 

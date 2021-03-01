@@ -225,6 +225,14 @@ class TaxiApp(App):
         self.apply_axy_options()
         axy.pen_down()
 
+    def motor_off(self):
+        Logger.info("disabling XY motors")
+        self.apply_axy_options()
+        axy.shutdown()
+
+    def on_stop(self):
+        self.motor_off()
+
     def start_plot(self):
         self.apply_axy_options()
         self._plot_thread = threading.Thread(
