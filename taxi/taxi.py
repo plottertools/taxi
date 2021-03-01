@@ -3,6 +3,7 @@ import io
 import math
 import os
 import pathlib
+import sys
 import threading
 from time import sleep
 from typing import Mapping, Optional
@@ -17,13 +18,17 @@ from kivy.properties import (
     DictProperty,
     NumericProperty,
     ObjectProperty,
+    StringProperty,
 )
 from kivy.uix.button import Button
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.togglebutton import ToggleButton
 
-from .axy.stub import axy
+if len(sys.argv) > 1 and sys.argv[1] == "stub":
+    from .axy.stub import axy
+else:
+    from .axy.axidraw import axy
 
 
 class FileChooserButton(Button):
@@ -31,8 +36,8 @@ class FileChooserButton(Button):
 
 
 class FileListLayout(StackLayout):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
         self.orientation = "lr-tb"
 
@@ -53,8 +58,8 @@ class LayerToggleButton(ToggleButton):
 
 
 class LayerListLayout(StackLayout):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
         self.orientation = "lr-tb"
         App.get_running_app().layer_list = self
@@ -103,6 +108,7 @@ class TaxiApp(App):
     layer_list = ObjectProperty()
     layer_visibility = DictProperty()
     plot_running = BooleanProperty()
+    page_format = StringProperty("n/a")
 
     def __init__(self):
         super().__init__()
@@ -155,23 +161,58 @@ class TaxiApp(App):
             "Taxi", self.config, str(pathlib.Path(__file__).parent / "settings.json")
         )
 
-    def load_svg(self):
+    def load_svg(self) -> None:
         self.document = vp.read_multilayer_svg(str(self.path), quantization=0.1)
         self.layer_list.populate(self.document)
 
+        # create page size label
+        page_size = self.document.page_size
+        if page_size[0] < page_size[1]:
+            landscape = False
+        else:
+            page_size = tuple(reversed(page_size))
+            landscape = True
+
+        format_name = ""
+        for name, sz in vp.PAGE_SIZES.items():
+            if math.isclose(sz[0], page_size[0], abs_tol=0.01) and math.isclose(
+                sz[1], page_size[1], abs_tol=0.01
+            ):
+                format_name = name
+                break
+        s = (
+            f"{self.document.page_size[0] / 96 * 25.4:.1f}x"
+            f"{self.document.page_size[1] / 96 * 25.4:.1f}mm"
+        )
+        if format_name != "":
+            s += f" ({format_name} {'landscape' if landscape else'portrait'})"
+        self.page_format = s
+
     def apply_axy_options(self):
-        axy.set_option("speed_pendown", self.config.get("axidraw", "speed_pendown"))
-        axy.set_option("speed_penup", self.config.get("axidraw", "speed_penup"))
-        axy.set_option("accel", self.config.get("axidraw", "accel"))
-        axy.set_option("pen_pos_down", self.config.get("axidraw", "pen_pos_down"))
-        axy.set_option("pen_pos_up", self.config.get("axidraw", "pen_pos_up"))
-        axy.set_option("pen_rate_lower", self.config.get("axidraw", "pen_rate_lower"))
-        axy.set_option("pen_rate_raise", self.config.get("axidraw", "pen_rate_raise"))
-        axy.set_option("pen_delay_down", self.config.get("axidraw", "pen_delay_down"))
-        axy.set_option("pen_delay_up", self.config.get("axidraw", "pen_delay_up"))
-        axy.set_option("const_speed", self.config.get("axidraw", "const_speed"))
-        axy.set_option("model", self.config.get("axidraw", "model"))
-        axy.set_option("port", self.config.get("axidraw", "port"))
+        axy.set_option(
+            "speed_pendown", round(float(self.config.get("axidraw", "speed_pendown")))
+        )
+        axy.set_option("speed_penup", round(float(self.config.get("axidraw", "speed_penup"))))
+        axy.set_option("accel", round(float(self.config.get("axidraw", "accel"))))
+        axy.set_option(
+            "pen_pos_down", round(float(self.config.get("axidraw", "pen_pos_down")))
+        )
+        axy.set_option("pen_pos_up", round(float(self.config.get("axidraw", "pen_pos_up"))))
+        axy.set_option(
+            "pen_rate_lower", round(float(self.config.get("axidraw", "pen_rate_lower")))
+        )
+        axy.set_option(
+            "pen_rate_raise", round(float(self.config.get("axidraw", "pen_rate_raise")))
+        )
+        axy.set_option(
+            "pen_delay_down", round(float(self.config.get("axidraw", "pen_delay_down")))
+        )
+        axy.set_option(
+            "pen_delay_up", round(float(self.config.get("axidraw", "pen_delay_up")))
+        )
+        axy.set_option("const_speed", bool(self.config.get("axidraw", "const_speed")))
+        axy.set_option("model", round(float(self.config.get("axidraw", "model"))))
+        axy.set_option("port", str(self.config.get("axidraw", "port")))
 
     def pen_up(self):
         self.apply_axy_options()
@@ -192,6 +233,7 @@ class TaxiApp(App):
         self._plot_thread.start()
         self._clock = Clock.schedule_interval(self.check_plot, 0.1)
 
+    # noinspection PyUnusedLocal
     def check_plot(self, dt):
         if self._plot_thread is not None and not self._plot_thread.is_alive():
             print("PLOTTING COMPLETED")

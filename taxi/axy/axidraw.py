@@ -1,11 +1,10 @@
-# noinspection PyUnresolvedReferences
-from pyaxidraw import axidraw
+import pyaxidraw
 
 
 class Axy:
     def __init__(self):
         self._options = {}
-        self.ad = axidraw.AxiDraw()
+        self.ad = pyaxidraw.axidraw.AxiDraw()
 
     def __del__(self):
         self.shutdown()
