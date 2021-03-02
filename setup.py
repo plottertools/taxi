@@ -23,5 +23,6 @@ setuptools.setup(
         "kivy>=2.0.0",
         "vpype>=1.5.1",
         "pyaxidraw @ https://cdn.evilmadscientist.com/dl/ad/public/AxiDraw_API.zip",
+        "watchgod>=0.7",
     ],
 )

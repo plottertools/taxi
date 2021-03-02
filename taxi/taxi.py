@@ -1,3 +1,4 @@
+import asyncio
 import copy
 import io
 import math
@@ -5,10 +6,10 @@ import os
 import pathlib
 import sys
 import threading
-from time import sleep
 from typing import Mapping, Optional
 
 import vpype as vp
+import watchgod
 from kivy.app import App
 from kivy.clock import Clock, ClockEvent
 from kivy.logger import Logger
@@ -40,17 +41,39 @@ class FileListLayout(StackLayout):
         super().__init__(**kwargs)
 
         self.orientation = "lr-tb"
+        self.svg_dir = pathlib.Path(App.get_running_app().config.get("taxi", "svg_dir"))
 
         for path in sorted(
-            pathlib.Path(App.get_running_app().config.get("taxi", "svg_dir")).iterdir(),
+            self.svg_dir.iterdir(),
             key=os.path.getmtime,
             reverse=True,
         ):
             if path.is_file() and path.name.lower().endswith(".svg"):
                 self.add_path(path)
 
-    def add_path(self, path: pathlib.Path) -> None:
-        self.add_widget(FileChooserButton(text=path.name, path=path))
+        # run the file watcher
+        self._task = asyncio.get_running_loop().create_task(self.check_new_files())
+
+    def __del__(self):
+        self._task.cancel()
+
+    def add_path(self, path: pathlib.Path, end=False) -> None:
+        self.add_widget(
+            FileChooserButton(text=path.name, path=path), len(self.children) if end else 0
+        )
+
+    async def check_new_files(self):
+        try:
+            async for changes in watchgod.awatch(str(self.svg_dir)):
+                # noinspection PyTypeChecker
+                for change in changes:
+                    # TODO: implement removal as well
+                    if change[0] == watchgod.Change.added:
+                        path = pathlib.Path(change[1])
+                        if path.suffix.lower() == ".svg":
+                            self.add_path(path, end=True)
+        except asyncio.CancelledError:
+            pass
 
 
 class LayerToggleButton(ToggleButton):
@@ -279,7 +302,3 @@ class TaxiApp(App):
 
         # plot
         axy.plot_svg(svg)
-
-
-if __name__ == "__main__":
-    TaxiApp().run()
