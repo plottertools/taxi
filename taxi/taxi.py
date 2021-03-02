@@ -8,6 +8,7 @@ import sys
 import threading
 from typing import Mapping, Optional
 
+import aiohttp
 import vpype as vp
 import watchgod
 from kivy.app import App
@@ -177,6 +178,16 @@ class TaxiApp(App):
                 "rotate": False,
             },
         )
+        config.setdefaults(
+            "notif",
+            {
+                "type": "none",
+                "host": "homeassistant.local",
+                "port": 8123,
+                "service": "notify.notify",
+                "token": "",
+            },
+        )
 
     def build_settings(self, settings):
         settings.add_json_panel(
@@ -262,6 +273,32 @@ class TaxiApp(App):
         self._plot_thread.start()
         self._clock = Clock.schedule_interval(self.check_plot, 0.1)
 
+    def send_notification(self, message: str) -> None:
+        notif_type = self.config.get("notif", "type")
+        if notif_type == "hass":
+            asyncio.get_event_loop().create_task(self.send_notification_hass(message))
+
+    async def send_notification_hass(self, message: str):
+        port = self.config.getint("notif", "port")
+        host = self.config.get("notif", "host")
+        token = self.config.get("notif", "token")
+        service = self.config.get("notif", "service").replace(".", "/")
+
+        Logger.info("Sending notification")
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                f"http://{host}:{port}/api/services/{service}",
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {token}",
+                },
+                json={"message": message},
+            ) as response:
+                Logger.info(
+                    f"Notification sent (status: {response.status}, "
+                    f"answer: {await response.text()})"
+                )
+
     # noinspection PyUnusedLocal
     def check_plot(self, dt):
         if self._plot_thread is not None and not self._plot_thread.is_alive():
@@ -269,6 +306,7 @@ class TaxiApp(App):
             self._plot_thread = None
             self._clock.cancel()
             self.plot_running = False
+            self.send_notification("Plot completed")
 
     @staticmethod
     def run_plot(

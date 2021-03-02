@@ -56,5 +56,40 @@
     "title": "port",
     "section": "axidraw",
     "key": "port"
+  },
+  {
+    "type": "title",
+    "title": "Notification settings"
+  },
+  {
+    "type": "options",
+    "title": "Type",
+    "section": "notif",
+    "key": "type",
+    "options": ["none","hass"]
+  },
+  {
+    "type": "string",
+    "title": "Service",
+    "section": "notif",
+    "key": "service"
+  },
+  {
+    "type": "string",
+    "title": "Host",
+    "section": "notif",
+    "key": "host"
+  },
+  {
+    "type": "numeric",
+    "title": "Port",
+    "section": "notif",
+    "key": "port"
+  },
+    {
+    "type": "string",
+    "title": "Token",
+    "section": "notif",
+    "key": "token"
   }
 ]
