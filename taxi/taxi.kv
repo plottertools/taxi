@@ -188,7 +188,7 @@
                 step: 1
 
                 value: app.pen_pos_down
-                on_value: app.pen_pos_down = self.value
+                on_value: app.pen_pos_down = int(self.value)
             ParamValue:
                 text: str(int(pen_down_slider.value))
             ParamButton:
@@ -212,7 +212,7 @@
                 step: 1
 
                 value: app.speed
-                on_value: app.speed = self.value
+                on_value: app.speed = int(self.value)
             ParamValue:
                 text: str(int(speed_slider.value))
             ParamButton:
@@ -234,7 +234,7 @@
                 step: 1
 
                 value: app.accel
-                on_value: app.accel = self.value
+                on_value: app.accel = int(self.value)
             ParamValue:
                 text: str(int(accel_slider.value))
             ParamButton:
