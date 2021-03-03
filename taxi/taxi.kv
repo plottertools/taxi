@@ -281,6 +281,8 @@
     halign: 'center'
     valign: 'middle'
 
+    state: "down" if app.layer_visible(self.layer_id) else "normal"
+
     on_state:
         app.layer_visibility[self.layer_id] = self.state == "down"
 

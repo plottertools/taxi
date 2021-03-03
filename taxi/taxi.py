@@ -92,7 +92,7 @@ class LayerListLayout(StackLayout):
         self.clear_widgets()
         if doc is not None:
             for layer_id in sorted(doc.layers):
-                w = LayerToggleButton(text=str(layer_id), state="down", layer_id=layer_id)
+                w = LayerToggleButton(text=str(layer_id), layer_id=layer_id)
                 self.add_widget(w)
 
     def select_all(self):
@@ -194,8 +194,12 @@ class TaxiApp(App):
             "Taxi", self.config, str(pathlib.Path(__file__).parent / "settings.json")
         )
 
+    def layer_visible(self, layer_id: int) -> bool:
+        return self.layer_visibility.get(layer_id, True)
+
     def load_svg(self) -> None:
         self.document = vp.read_multilayer_svg(str(self.path), quantization=0.1)
+        self.layer_visibility.clear()
         self.layer_list.populate(self.document)
 
         # create page size label
