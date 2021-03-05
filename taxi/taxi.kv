@@ -8,7 +8,7 @@
     font_size: 60
     bold: True
 
-<FileChooserButton>
+<FileChooserButton>:
     on_release:
         app.path = self.path
         app.load_svg()
@@ -19,6 +19,12 @@
     text_size: self.size
     halign: 'center'
     valign: 'middle'
+
+<MotorOffButton@Button>:
+    text: 'Motor Off'
+    background_color: .7, .7, 1., 1.
+    size_hint_y: None
+    on_release: app.motor_off()
 
 <FileChooserScreen>:
     BoxLayout:
@@ -44,11 +50,7 @@
                 size_hint_y: None
                 on_release: app.open_settings()
 
-            Button:
-                text: 'Motor Off'
-                background_color: .7, .7, 1., 1.
-                size_hint_y: None
-                on_release: app.motor_off()
+            MotorOffButton:
 
             Button:
                 text: 'Quit'
@@ -354,6 +356,8 @@
                 on_release:
                     root.manager.transition.direction = 'right'
                     root.manager.current = 'layers'
+
+            MotorOffButton:
 
             Button:
                 text: 'Home'

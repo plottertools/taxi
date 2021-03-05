@@ -334,7 +334,7 @@ class TaxiApp(App):
             Logger.info("rotating SVG")
             doc = copy.deepcopy(doc)
             doc.rotate(-math.pi / 2)
-            doc.translate(0, doc.page_size[1])
+            doc.translate(0, doc.page_size[0])
             doc.page_size = tuple(reversed(doc.page_size))
 
         # convert to SVG
