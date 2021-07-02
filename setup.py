@@ -21,7 +21,7 @@ setuptools.setup(
         "numpy>=1.19",
         "setuptools",
         "kivy>=2.0.0",
-        "vpype>=1.5.1",
+        "vpype>=1.7.0",
         "pyaxidraw @ https://cdn.evilmadscientist.com/dl/ad/public/AxiDraw_API.zip",
         "watchgod>=0.7",
         "aiohttp",
