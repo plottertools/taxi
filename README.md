@@ -22,12 +22,14 @@ Here are a few things *taxi* feels strongly about:
 
 ## Installation
 
+**NOTE**: as of [vpype 1.7](https://github.com/abey79/vpype/releases/tag/1.7.0), the following instructions are outdated and will be considerably simplified thanks to PySide2 no longer being required. I will update them ASAP.
+
 *Note*: because of its dependencies, *taxi* is currently rather tricky to install on a Raspberry Pi (which, I will agree, is unfortunate). This installation procedure has been tested with Raspbian Testing.
 
 A number of dependencies are required:
 
 ```
-$ sudo apt-get install python3.9 "python3-pyside2.*" python3-shapely python3-pil python3-numpy python3-scipy python3-serial libsdl2-dev 
+$ sudo apt-get install python3.9 python3-dev "python3-pyside2.*" python3-shapely python3-pil python3-numpy python3-scipy python3-serial libsdl2-dev 
 ```
 
 Using a virtual environment is mandatory *BUT* the global environment's PySide2 must be used as it is not available from PyPI. The virtual environment must thus allow reuse of package from the global environment:
