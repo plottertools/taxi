@@ -25,5 +25,6 @@ setuptools.setup(
         "pyaxidraw @ https://cdn.evilmadscientist.com/dl/ad/public/AxiDraw_API.zip",
         "watchgod>=0.7",
         "aiohttp",
+        "Pillow",
     ],
 )
