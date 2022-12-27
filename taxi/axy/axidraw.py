@@ -1,10 +1,10 @@
-import pyaxidraw
+from pyaxidraw import axidraw
 
 
 class Axy:
     def __init__(self):
         self._options = {}
-        self.ad = pyaxidraw.axidraw.AxiDraw()
+        self.ad = axidraw.AxiDraw()
 
     def __del__(self):
         self.shutdown()
